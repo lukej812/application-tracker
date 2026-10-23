@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/demo">Demo</Link>
             <Link href="/#how">How it works</Link>
             <Link href="/#privacy">Privacy</Link>
-            <a href="https://github.com/lukej812/callback">GitHub</a>
+            <a href="https://github.com/lukej812/application-tracker">GitHub</a>
           </nav>
         </div>
         <main id="main">{children}</main>
