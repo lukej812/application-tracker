@@ -4,6 +4,9 @@
  */
 import { z } from "zod";
 
+// The Content Security Policy blocks eval, so skip zod's eval-based speedup instead of letting it probe.
+z.config({ jitless: true });
+
 export const MAX_EMAILS_PER_REQUEST = 20;
 export const MAX_TEXT_CHARS = 2000;
 

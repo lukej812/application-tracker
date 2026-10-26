@@ -476,6 +476,32 @@ code {
   color: var(--ink-2);
   font-size: 13px;
 }
+.sender-warning {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--stamp);
+}
+.sender-warning::before {
+  content: "\26A0\FE0E  ";
+}
+.why .why-warning {
+  color: var(--stamp);
+  font-weight: 600;
+}
+.notice {
+  color: var(--warn);
+  font-weight: 600;
+}
+.signin {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.signin-button {
+  min-height: 44px;
+}
 .flag {
   margin-top: 8px;
   min-height: 44px;

@@ -47,7 +47,8 @@ export function buildQuery(days = 90): string {
     '"application for"',
     "interview",
   ];
-  return `newer_than:${days}d (from:(${domains.join(" OR ")}) OR subject:(${subjects.join(" OR ")}))`;
+  // -from:me skips the user's own replies, which would otherwise read as emails from their own address.
+  return `newer_than:${days}d -from:me (from:(${domains.join(" OR ")}) OR subject:(${subjects.join(" OR ")}))`;
 }
 
 export function decodeBase64Url(data: string): string {

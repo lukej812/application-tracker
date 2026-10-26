@@ -54,6 +54,11 @@ describe("extractCompanyAndRole", () => {
     expect(extractCompanyAndRole("careers@jobs.fernway.example", "Application received", "Thanks for your application.").company).toBe("Fernway");
   });
 
+  it("never treats a personal email account as the company", () => {
+    const { company } = extractCompanyAndRole("Jane Doe <jane.doe@gmail.com>", "Quick chat?", "Hi, I'd love to talk about a role.");
+    expect(company).toBeNull();
+  });
+
   it("never names the tracking system as the company", () => {
     expect(extractCompanyAndRole("Workday <workday@myworkday.com>", "Update", "Hello").company).toBeNull();
   });

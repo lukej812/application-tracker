@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { INDUSTRY_LABEL, ROLE_LABEL, STATUS_LABEL, STATUS_ORDER } from "@/lib/labels";
+import { SCAM_ADVICE, senderWarning } from "@/lib/sender-check";
 import type { Application, Status } from "@/lib/types";
 
 type GroupBy = "status" | "role" | "industry";
@@ -119,28 +120,38 @@ export function Tracker({ applications, flagKey = "callback-flags" }: { applicat
               </span>
             </header>
             <ul className="rows">
-              {g.rows.map((a) => (
-                <li key={a.id} className={flags.has(a.id) ? "row flagged" : "row"}>
-                  <div className="row-main">
-                    <div className="row-co">{a.company}</div>
-                    <div className={a.role ? "row-role" : "row-role muted"}>{a.role ?? "Role not named in email"}</div>
-                    <div className="row-dates">
-                      Applied {fmt(a.applied)} · Updated {fmt(a.updated)}
+              {g.rows.map((a) => {
+                // Scams pose as next steps, so only rows that claim progress get checked.
+                const warning = isMoving(a) ? senderWarning(a.sender) : null;
+                return (
+                  <li key={a.id} className={flags.has(a.id) ? "row flagged" : "row"}>
+                    <div className="row-main">
+                      <div className="row-co">{a.company}</div>
+                      {warning && <div className="sender-warning">Check this sender before you reply</div>}
+                      <div className={a.role ? "row-role" : "row-role muted"}>{a.role ?? "Role not named in email"}</div>
+                      <div className="row-dates">
+                        Applied {fmt(a.applied)} · Updated {fmt(a.updated)}
+                      </div>
                     </div>
-                  </div>
-                  <span className={`stamp s-${STAMP_TONE[a.status]}`}>{STATUS_LABEL[a.status]}</span>
-                  <details className="why">
-                    <summary>Why</summary>
-                    <p>{a.evidence}</p>
-                    <p className="why-meta">
-                      From <code>{a.sender}</code> · sorted by {a.method === "ai" ? "the AI pass" : "a rule"}
-                    </p>
-                    <button type="button" className="flag" aria-pressed={flags.has(a.id)} onClick={() => toggleFlag(a.id)}>
-                      {flags.has(a.id) ? "Marked as wrong" : "This is wrong"}
-                    </button>
-                  </details>
-                </li>
-              ))}
+                    <span className={`stamp s-${STAMP_TONE[a.status]}`}>{STATUS_LABEL[a.status]}</span>
+                    <details className="why">
+                      <summary>Why</summary>
+                      <p>{a.evidence}</p>
+                      {warning && (
+                        <p className="why-warning">
+                          {warning} {SCAM_ADVICE}
+                        </p>
+                      )}
+                      <p className="why-meta">
+                        From <code>{a.sender}</code> · sorted by {a.method === "ai" ? "the AI pass" : "a rule"}
+                      </p>
+                      <button type="button" className="flag" aria-pressed={flags.has(a.id)} onClick={() => toggleFlag(a.id)}>
+                        {flags.has(a.id) ? "Marked as wrong" : "This is wrong"}
+                      </button>
+                    </details>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         );

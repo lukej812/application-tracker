@@ -138,8 +138,14 @@ export function findInText(text: string): Found {
   return found;
 }
 
+/** Personal email providers. A sender here is a person, so neither the name nor the domain is the company. */
+export const FREE_MAIL = new Set([
+  "gmail.com", "googlemail.com", "yahoo.com", "ymail.com", "outlook.com", "hotmail.com", "live.com", "msn.com",
+  "aol.com", "icloud.com", "me.com", "proton.me", "protonmail.com", "gmx.com", "mail.com", "zoho.com", "yandex.com",
+]);
+
 function companyFromSender(sender: Sender, ats: Ats | null): string | null {
-  if (ats?.companyFrom === "content") return null;
+  if (ats?.companyFrom === "content" || FREE_MAIL.has(sender.domain)) return null;
   const fromName = cleanCompany(sender.name);
   if (fromName) return fromName;
   if (!ats || ats.companyFrom === "local") {

@@ -58,7 +58,7 @@ describe("htmlToText", () => {
 describe("buildQuery", () => {
   it("covers the tracking systems and only LinkedIn's application address", () => {
     const q = buildQuery(90);
-    expect(q.startsWith("newer_than:90d")).toBe(true);
+    expect(q.startsWith("newer_than:90d -from:me ")).toBe(true);
     expect(q).toContain("greenhouse-mail.io");
     expect(q).toContain("jobs-noreply@linkedin.com");
     expect(q).not.toMatch(/(?<!@)linkedin\.com/);
